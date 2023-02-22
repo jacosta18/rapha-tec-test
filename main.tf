@@ -11,6 +11,7 @@ resource "aws_vpc" "app_vpc" {
   }
 }
 
+# Create gateway
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.app_vpc.id
 
@@ -19,6 +20,7 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
+# Creates a public subnet
 resource "aws_subnet" "public_subnet" {
   vpc_id            = aws_vpc.app_vpc.id
   cidr_block        = var.public_subnet_cidr
@@ -48,10 +50,11 @@ resource "aws_route_table_association" "public_rt_asso" {
   route_table_id = aws_route_table.public_rt.id
 }
 
+# Creates the instance
 resource "aws_instance" "web" {
   ami               = "ami-06e0ce9d3339cb039"
   instance_type     = var.instance_type
-  key_name          = ""
+  key_name          = var.instance_key
   subnet_id         = aws_subnet.public_subnet.id
   security_groups   = [aws_security_group.sg.id]
   user_data         = <<-EOF
@@ -74,6 +77,7 @@ resource "aws_instance" "web" {
   } 
 }
 
+# EC2 key pair to allow connection
 resource "aws_key_pair" "TF_key" {
   key_name   = var.instance_key
   public_key = tls_private_key.rsa.public_key_openssh
