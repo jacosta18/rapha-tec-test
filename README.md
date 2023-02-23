@@ -10,6 +10,8 @@ Welcome to Hello World
 
 ## Get started
 
+Change directories to /terraform, then:
+
 Initialize terraform:
 ```
 terraform init
@@ -34,4 +36,3 @@ Terraform destroy:
 ```
 terraform destroy -var-file=aws.tfvars
 ```
-
